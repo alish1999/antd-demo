@@ -1,8 +1,7 @@
 import React from "react";
 import { Form, Input } from "antd";
 
-const Step1 = ({ data, onUpdate }) => {
-  const [form] = Form.useForm();
+const Step1 = ({ data, onUpdate, form }) => {
 
   const onValuesChange = () => {
     onUpdate(form.getFieldsValue());

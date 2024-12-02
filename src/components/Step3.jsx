@@ -1,9 +1,7 @@
 import React from "react";
 import { Form, Input } from "antd";
 
-const Step3 = ({ data, onUpdate }) => {
-  const [form] = Form.useForm();
-
+const Step3 = ({ data, onUpdate, form }) => {
   const onValuesChange = () => {
     onUpdate(form.getFieldsValue());
   };
@@ -20,7 +18,7 @@ const Step3 = ({ data, onUpdate }) => {
         name="cardNumber"
         rules={[
           { required: true, message: "Card number is required" },
-          { len: 16, message: "Card number must be 16 digits" },
+        //   { len: 16, message: "Card number must be 16 digits" },
         ]}
       >
         <Input />

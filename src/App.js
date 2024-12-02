@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Steps, Button, message } from "antd";
+import { Steps, Button, message, Form } from "antd";
 import Step1 from "./components/Step1";
 import Step2 from "./components/Step2";
 import Step3 from "./components/Step3";
@@ -13,18 +13,31 @@ const App = () => {
   const [location, setLocation] = useState({});
   const [paymentInfo, setPaymentInfo] = useState({});
 
+  const [form1] = Form.useForm();
+  const [form2] = Form.useForm();
+  const [form3] = Form.useForm();
+
   const steps = [
     {
       title: "Personal Info",
-      content: <Step1 data={personalInfo} onUpdate={setPersonalInfo} />,
+      content: (
+        <Step1
+          data={personalInfo}
+          onUpdate={setPersonalInfo}
+          form={form1} // Pass the form instance
+        />
+      ),
+      form: form1,
     },
     {
       title: "Location",
-      content: <Step2 data={location} onUpdate={setLocation} />,
+      content: <Step2 data={location} onUpdate={setLocation} form={form2} />,
+      form: form2,
     },
     {
       title: "Payment Info",
-      content: <Step3 data={paymentInfo} onUpdate={setPaymentInfo} />,
+      content: <Step3 data={paymentInfo} onUpdate={setPaymentInfo} form={form3} />,
+      form: form3,
     },
     {
       title: "Summary",
@@ -34,7 +47,11 @@ const App = () => {
 
   const next = () => {
     if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1);
+      steps[currentStep].form.validateFields().then(() => {
+        setCurrentStep(currentStep + 1);
+      }).catch(() => {
+        message.error("Please complete the current step first");
+      });
     } else {
       message.success("Form submitted successfully!");
       console.log({ personalInfo, location, paymentInfo });

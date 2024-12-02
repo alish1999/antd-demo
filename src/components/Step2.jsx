@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Form, Select, Spin } from "antd";
 import { fetchCountries, fetchCities } from "../utils/api";
 
-const Step2 = ({ data, onUpdate }) => {
-  const [form] = Form.useForm();
+const Step2 = ({ data, onUpdate,form }) => {
   const [countries, setCountries] = useState([]);
   const [cities, setCities] = useState([]);
   const [loading, setLoading] = useState(false);
