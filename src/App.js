@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Steps, Button, message, Form } from "antd";
 import Step1 from "./components/Step1";
 import Step2 from "./components/Step2";
@@ -8,14 +8,35 @@ import Summary from "./components/Summary";
 const { Step } = Steps;
 
 const App = () => {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [personalInfo, setPersonalInfo] = useState({});
-  const [location, setLocation] = useState({});
-  const [paymentInfo, setPaymentInfo] = useState({});
+  const loadState = (key, defaultValue) => {
+    const stored = localStorage.getItem(key);
+    console.log(stored,key);
+    return stored ? JSON.parse(stored) : defaultValue;
+  };
+
+  const saveState = (key, value) => {
+    localStorage.setItem(key, JSON.stringify(value));
+  };
+
+  const [currentStep, setCurrentStep] = useState(() =>
+    loadState("currentStep", 0)
+  );
+  const [personalInfo, setPersonalInfo] = useState(() =>
+    loadState("personalInfo", {})
+  );
+  const [location, setLocation] = useState(() => loadState("location", {}));
+  const [paymentInfo, setPaymentInfo] = useState(JSON.parse(localStorage.getItem("paymentInfo"))||{});
 
   const [form1] = Form.useForm();
   const [form2] = Form.useForm();
   const [form3] = Form.useForm();
+
+  useEffect(() => {
+    saveState("currentStep", currentStep);
+    saveState("personalInfo", personalInfo);
+    saveState("location", location);
+    saveState("paymentInfo", paymentInfo);
+  }, [currentStep, personalInfo, location, paymentInfo]);
 
   const steps = [
     {
@@ -36,7 +57,9 @@ const App = () => {
     },
     {
       title: "Payment Info",
-      content: <Step3 data={paymentInfo} onUpdate={setPaymentInfo} form={form3} />,
+      content: (
+        <Step3 data={paymentInfo} onUpdate={setPaymentInfo} form={form3} />
+      ),
       form: form3,
     },
     {
@@ -47,11 +70,14 @@ const App = () => {
 
   const next = () => {
     if (currentStep < steps.length - 1) {
-      steps[currentStep].form.validateFields().then(() => {
-        setCurrentStep(currentStep + 1);
-      }).catch(() => {
-        message.error("Please complete the current step first");
-      });
+      steps[currentStep].form
+        .validateFields()
+        .then(() => {
+          setCurrentStep(currentStep + 1);
+        })
+        .catch(() => {
+          message.error("Please complete the current step first");
+        });
     } else {
       message.success("Form submitted successfully!");
       console.log({ personalInfo, location, paymentInfo });
