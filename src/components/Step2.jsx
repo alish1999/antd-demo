@@ -45,7 +45,10 @@ const Step2 = ({ data, onUpdate,form }) => {
         rules={[{ required: true, message: "Country is required" }]}
       >
         <Select
-          onChange={onCountryChange}
+          onChange={(data)=>{
+            onCountryChange(data);
+            form.setFieldsValue({ city: undefined });
+          }}
           showSearch
           filterOption={(input, option) =>
             (option?.key || "").toLowerCase().includes(input.toLowerCase())
