@@ -19,10 +19,12 @@ const Summary = ({ data, onUpdate }) => {
 
   // Helper function to update data
   const updateField = (key, section, value) => {
-    const updatedData = {
-      ...formData,
-      [section]: { ...formData[section], [key]: value },
-    };
+    // const updatedData = {
+    //   ...formData,
+    //   [section]: { ...formData[section], [key]: value },
+    // };
+    const updatedData = { ...formData };
+    updatedData[section][key] = value;
     setFormData(updatedData);
     onUpdate(updatedData); // Update the parent component/state
     setEditingKey(null); // Exit editing mode
