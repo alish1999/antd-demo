@@ -38,9 +38,15 @@ const Step2 = ({ data, onUpdate,form }) => {
         name="country"
         rules={[{ required: true, message: "Country is required" }]}
       >
-        <Select onChange={onCountryChange}>
+        <Select
+          onChange={onCountryChange}
+          showSearch
+          filterOption={(input, option) =>
+            (option?.key || "").toLowerCase().includes(input.toLowerCase())
+          }
+        >
           {countries.map((country) => (
-            <Select.Option key={country.code} value={country.code}>
+            <Select.Option key={country.name} value={country.code}>
               {country.name}
             </Select.Option>
           ))}
@@ -49,9 +55,16 @@ const Step2 = ({ data, onUpdate,form }) => {
       <Form.Item
         label="City"
         name="city"
+        showSearch
         rules={[{ required: true, message: "City is required" }]}
       >
-        <Select loading={loading}>
+        <Select
+          loading={loading}
+          showSearch
+          filterOption={(input, option) =>
+            (option?.key || "").toLowerCase().includes(input.toLowerCase())
+          }
+        >
           {cities.map((city) => (
             <Select.Option key={city.name} value={city.name}>
               {city.name}
