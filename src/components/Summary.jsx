@@ -33,6 +33,7 @@ const Summary = ({ data, onUpdate }) => {
 
   // Editable component generator
   const EditableField = ({ value, section, fieldKey, options }) => {
+    // If not editing, display the value
     if (!isEditing(fieldKey)) {
       return (
         <span onClick={() => setEditingKey(fieldKey)}>
@@ -40,8 +41,7 @@ const Summary = ({ data, onUpdate }) => {
         </span>
       );
     }
-
-    // For Input fields (e.g., First Name, Email)
+  // If editing, display an input field
     return (
       <Input
         defaultValue={value}
