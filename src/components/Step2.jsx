@@ -24,17 +24,15 @@ const Step2 = ({ formData, onUpdate }) => {
       .finally(() => setLoading(false));
   };
 
-  const onFinish = (values) => {
-    onUpdate(values);
-  };
-
+    const onValuesChange = () => {
+        onUpdate(form.getFieldsValue());
+    };
   return (
     <Form
       form={form}
       layout="vertical"
       initialValues={formData}
-      onFinish={onFinish}
-      onValuesChange={() => form.submit()}
+      onValuesChange={onValuesChange}
     >
       <Form.Item
         label="Country"
@@ -56,7 +54,7 @@ const Step2 = ({ formData, onUpdate }) => {
       >
         <Select loading={loading}>
           {cities.map((city) => (
-            <Select.Option key={city.id} value={city.name}>
+            <Select.Option key={city.name} value={city.name}>
               {city.name}
             </Select.Option>
           ))}

@@ -4,8 +4,8 @@ import { Form, Input } from "antd";
 const Step1 = ({ formData, onUpdate }) => {
   const [form] = Form.useForm();
 
-  const onFinish = (values) => {
-    onUpdate(values);
+  const onValuesChange = () => {
+    onUpdate(form.getFieldsValue());
   };
 
   return (
@@ -13,8 +13,7 @@ const Step1 = ({ formData, onUpdate }) => {
       form={form}
       layout="vertical"
       initialValues={formData}
-      onFinish={onFinish}
-      onValuesChange={() => form.submit()}
+      onValuesChange={onValuesChange}
     >
       <Form.Item
         label="First Name"
