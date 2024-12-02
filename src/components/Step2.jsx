@@ -6,12 +6,14 @@ const Step2 = ({ data, onUpdate,form }) => {
   const [countries, setCountries] = useState([]);
   const [cities, setCities] = useState([]);
   const [loading, setLoading] = useState(false);
-  const onCountryChange = (country) => {
+  const onCountryChange = async (country) => {
     console.log(country);
     setLoading(true);
-    fetchCities(country)
-      .then(setCities)
-      .finally(() => setLoading(false));
+    const cities = await fetchCities(country);
+    if(cities){
+      setCities(cities);
+    }
+    setLoading(false);
   };
   useEffect(() => {
     const getCountryData = async () => {

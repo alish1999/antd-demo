@@ -34,6 +34,6 @@ export const fetchCities = async (countryCode) => {
     }));
   } catch (error) {
     console.error("Error fetching cities:", error);
-    return [];
+    return;
   }
 };
