@@ -6,15 +6,6 @@ const Step2 = ({ data, onUpdate,form }) => {
   const [countries, setCountries] = useState([]);
   const [cities, setCities] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const getCountryData = async () => {
-        const countryResult = await fetchCountries();
-        setCountries(countryResult);
-        };
-    getCountryData();
-  }, []);
-
   const onCountryChange = (country) => {
     console.log(country);
     setLoading(true);
@@ -22,6 +13,19 @@ const Step2 = ({ data, onUpdate,form }) => {
       .then(setCities)
       .finally(() => setLoading(false));
   };
+  useEffect(() => {
+    const getCountryData = async () => {
+        const countryResult = await fetchCountries();
+        setCountries(countryResult);
+        };
+
+    if(form.getFieldValue("country") !== undefined){
+        onCountryChange(form.getFieldValue("country"));
+    }  
+    getCountryData();
+  }, []);
+
+
 
     const onValuesChange = () => {
         onUpdate(form.getFieldsValue());
