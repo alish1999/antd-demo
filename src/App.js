@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Steps, Button, message, Form } from "antd";
+import { Steps, Button, message, Form, Progress, Card } from "antd";
 import Step1 from "./components/Step1";
 import Step2 from "./components/Step2";
 import Step3 from "./components/Step3";
@@ -10,7 +10,6 @@ const { Step } = Steps;
 const App = () => {
   const loadState = (key, defaultValue) => {
     const stored = localStorage.getItem(key);
-    console.log(stored,key);
     return stored ? JSON.parse(stored) : defaultValue;
   };
 
@@ -25,7 +24,9 @@ const App = () => {
     loadState("personalInfo", {})
   );
   const [location, setLocation] = useState(() => loadState("location", {}));
-  const [paymentInfo, setPaymentInfo] = useState(JSON.parse(localStorage.getItem("paymentInfo"))||{});
+  const [paymentInfo, setPaymentInfo] = useState(() =>
+    loadState("paymentInfo", {})
+  );
 
   const [form1] = Form.useForm();
   const [form2] = Form.useForm();
@@ -42,11 +43,7 @@ const App = () => {
     {
       title: "Personal Info",
       content: (
-        <Step1
-          data={personalInfo}
-          onUpdate={setPersonalInfo}
-          form={form1} // Pass the form instance
-        />
+        <Step1 data={personalInfo} onUpdate={setPersonalInfo} form={form1} />
       ),
       form: form1,
     },
@@ -95,35 +92,53 @@ const App = () => {
 
   const prev = () => setCurrentStep(currentStep - 1);
 
+  const progress = Math.round((currentStep / (steps.length - 1)) * 100);
+
   return (
-    <div style={{ width: "60%", margin: "0 auto", marginTop: 50 }}>
+    <Card style={{ width: "70%", margin: "0 auto", marginTop: 10 }}>
+      <Progress
+        percent={progress}
+        showInfo={false}
+        style={{ marginBottom: 20 }}
+        strokeColor={{
+          "0%": "#108ee9",
+          "100%": "#87d068",
+        }}
+      />
+
+      {/* Step Titles */}
       <Steps current={currentStep} style={{ marginBottom: 40 }}>
         {steps.map((item, index) => (
           <Step key={index} title={item.title} />
         ))}
       </Steps>
       <div>{steps[currentStep].content}</div>
+
+      {/* Navigation Buttons */}
       <div
         style={{
-          marginTop: 30,
+          margin: 30,
           display: "flex",
           justifyContent: "space-between",
         }}
       >
-        {currentStep > 0 && (
-          <Button onClick={prev} style={{ marginRight: 8 }}>
-            Previous
-          </Button>
-        )}
+        <Button
+          onClick={prev}
+          style={{ visibility: currentStep > 0 ? "visible" : "hidden" }}
+          size="large"
+        >
+          Previous
+        </Button>
         <Button
           type="primary"
           onClick={next}
           disabled={currentStep === steps.length - 1 && !paymentInfo}
+          size="large"
         >
           {currentStep === steps.length - 1 ? "Submit" : "Next"}
         </Button>
       </div>
-    </div>
+    </Card>
   );
 };
 
