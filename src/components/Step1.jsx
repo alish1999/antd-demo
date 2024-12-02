@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Input } from "antd";
 
-const Step1 = ({ formData, onUpdate }) => {
+const Step1 = ({ data, onUpdate }) => {
   const [form] = Form.useForm();
 
   const onValuesChange = () => {
@@ -12,7 +12,7 @@ const Step1 = ({ formData, onUpdate }) => {
     <Form
       form={form}
       layout="vertical"
-      initialValues={formData}
+      initialValues={data}
       onValuesChange={onValuesChange}
     >
       <Form.Item

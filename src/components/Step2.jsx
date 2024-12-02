@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Form, Select, Spin } from "antd";
 import { fetchCountries, fetchCities } from "../utils/api";
 
-const Step2 = ({ formData, onUpdate }) => {
+const Step2 = ({ data, onUpdate }) => {
   const [form] = Form.useForm();
   const [countries, setCountries] = useState([]);
   const [cities, setCities] = useState([]);
@@ -31,7 +31,7 @@ const Step2 = ({ formData, onUpdate }) => {
     <Form
       form={form}
       layout="vertical"
-      initialValues={formData}
+      initialValues={data}
       onValuesChange={onValuesChange}
     >
       <Form.Item
