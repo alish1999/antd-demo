@@ -1,13 +1,55 @@
-import React from "react";
-import { Card, Typography, Divider, Descriptions } from "antd";
+import React, { useState } from "react";
+import {
+  Card,
+  Typography,
+  Divider,
+  Descriptions,
+  Input,
+  Select,
+  Button,
+  message,
+} from "antd";
 
 const { Title, Text } = Typography;
 
-const Summary = ({ data }) => {
-  const { personalInfo, location, paymentInfo } = data;
+const Summary = ({ data, onUpdate }) => {
+  const [editingKey, setEditingKey] = useState(null); // Track which field is being edited
+  const [formData, setFormData] = useState(data); // Maintain a local copy of the data
+  const { personalInfo, location, paymentInfo } = formData;
 
-  // Helper to check if fields are empty or invalid
-  const getFieldValue = (value) => (value ? value : "Not Provided");
+  // Helper function to update data
+  const updateField = (key, section, value) => {
+    const updatedData = {
+      ...formData,
+      [section]: { ...formData[section], [key]: value },
+    };
+    setFormData(updatedData);
+    onUpdate(updatedData); // Update the parent component/state
+    setEditingKey(null); // Exit editing mode
+  };
+
+  // Helper to toggle editing mode
+  const isEditing = (key) => editingKey === key;
+
+  // Editable component generator
+  const EditableField = ({ value, section, fieldKey, options }) => {
+    if (!isEditing(fieldKey)) {
+      return (
+        <span onClick={() => setEditingKey(fieldKey)}>
+          {value || "Not Provided"}
+        </span>
+      );
+    }
+
+    // For Input fields (e.g., First Name, Email)
+    return (
+      <Input
+        defaultValue={value}
+        onBlur={(e) => updateField(fieldKey, section, e.target.value)}
+        onPressEnter={(e) => updateField(fieldKey, section, e.target.value)}
+      />
+    );
+  };
 
   return (
     <Card style={{ margin: "20px auto", maxWidth: 600 }}>
@@ -18,42 +60,91 @@ const Summary = ({ data }) => {
       <Divider orientation="left">Personal Information</Divider>
       <Descriptions bordered column={1}>
         <Descriptions.Item label="First Name">
-          {getFieldValue(personalInfo.firstName)}
+          <EditableField
+            value={personalInfo.firstName}
+            section="personalInfo"
+            fieldKey="firstName"
+          />
         </Descriptions.Item>
         <Descriptions.Item label="Last Name">
-          {getFieldValue(personalInfo.lastName)}
+          <EditableField
+            value={personalInfo.lastName}
+            section="personalInfo"
+            fieldKey="lastName"
+          />
         </Descriptions.Item>
         <Descriptions.Item label="Email">
-          {getFieldValue(personalInfo.email)}
+          <EditableField
+            value={personalInfo.email}
+            section="personalInfo"
+            fieldKey="email"
+          />
         </Descriptions.Item>
         <Descriptions.Item label="Phone">
-          {getFieldValue(personalInfo.phone)}
+          <EditableField
+            value={personalInfo.phone}
+            section="personalInfo"
+            fieldKey="phone"
+          />
         </Descriptions.Item>
       </Descriptions>
 
       <Divider orientation="left">Location</Divider>
       <Descriptions bordered column={1}>
         <Descriptions.Item label="Country">
-          {getFieldValue(location.country)}
+          <EditableField
+            value={location.country}
+            section="location"
+            fieldKey="country"
+          />
         </Descriptions.Item>
         <Descriptions.Item label="City">
-          {getFieldValue(location.city)}
+          <EditableField
+            value={location.city}
+            section="location"
+            fieldKey="city"
+          />
         </Descriptions.Item>
       </Descriptions>
 
       <Divider orientation="left">Payment Information</Divider>
       <Descriptions bordered column={1}>
         <Descriptions.Item label="Card Number">
-          {getFieldValue(paymentInfo?.cardNumber?.replace(/.(?=.{4})/g, "*"))}
+          <EditableField
+            value={paymentInfo?.cardNumber}
+            section="paymentInfo"
+            fieldKey="cardNumber"
+          />
         </Descriptions.Item>
         <Descriptions.Item label="Expiry Date">
-          {getFieldValue(paymentInfo?.expiryDate)}
+          <EditableField
+            value={paymentInfo?.expiryDate}
+            section="paymentInfo"
+            fieldKey="expiryDate"
+          />
         </Descriptions.Item>
-        <Descriptions.Item label="CVV">***</Descriptions.Item>
+        <Descriptions.Item label="CVV">
+          {" "}
+          <EditableField
+            value={paymentInfo?.cvv}
+            section="paymentInfo"
+            fieldKey="cvv"
+          />
+        </Descriptions.Item>
       </Descriptions>
 
       <Divider />
-      <Text type="secondary" style={{ textAlign: "center", display: "block" }}>
+      {/* <Button type="primary" block onClick={() => {
+        console.log(formData);
+        message.success("Form submitted successfully!");
+        }
+        }>
+        Submit
+      </Button> */}
+      <Text
+        type="secondary"
+        style={{ textAlign: "center", display: "block", marginTop: 10 }}
+      >
         Please verify all your information before submitting.
       </Text>
     </Card>

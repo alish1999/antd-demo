@@ -64,7 +64,16 @@ const App = () => {
     },
     {
       title: "Summary",
-      content: <Summary data={{ personalInfo, location, paymentInfo }} />,
+      content: (
+        <Summary
+          data={{ personalInfo, location, paymentInfo }}
+          onUpdate={(updatedData) => {
+            setPersonalInfo(updatedData.personalInfo);
+            setLocation(updatedData.location);
+            setPaymentInfo(updatedData.paymentInfo);
+          }}
+        />
+      ),
     },
   ];
 
