@@ -1,19 +1,25 @@
 import React from "react";
-import { Form, Input, Select, DatePicker } from "antd";
+import { Form, Input, DatePicker } from "antd";
 import dayjs from "dayjs";
 
-const { Option } = Select;
-
 const Step3 = ({ data, onUpdate, form }) => {
+  // Handle onValuesChange to keep expiryDate in the correct format
   const onValuesChange = () => {
-    onUpdate({...form.getFieldsValue(),expiryDate:form?.getFieldValue('expiryDate')?.format('MM/YYYY')});
+    const formValues = form.getFieldsValue();
+    onUpdate({
+      ...formValues,
+      expiryDate: formValues.expiryDate?.format("MM/YYYY"),
+    });
   };
 
   return (
     <Form
       form={form}
       layout="vertical"
-      initialValues={data}
+      initialValues={{
+        ...data,
+        expiryDate: data.expiryDate ? dayjs(data.expiryDate, "MM/YYYY") : null,
+      }}
       onValuesChange={onValuesChange}
     >
       {/* Credit Card Number */}
@@ -51,7 +57,6 @@ const Step3 = ({ data, onUpdate, form }) => {
           disabledDate={(current) =>
             current && current.isBefore(dayjs(), "month")
           }
-        //   onChange={(value) => form.setFieldsValue({ expiryDate: value })}
         />
       </Form.Item>
 
