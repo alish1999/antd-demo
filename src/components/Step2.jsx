@@ -61,6 +61,7 @@ const Step2 = ({ data, onUpdate,form }) => {
         <Select
           loading={loading}
           showSearch
+          disabled ={cities.length === 0 && form.getFieldValue("country") === undefined}
           filterOption={(input, option) =>
             (option?.key || "").toLowerCase().includes(input.toLowerCase())
           }
